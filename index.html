@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Combo Calculator - NLH Range</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #1a1a2e;
+    color: #e0e0e0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+  h1 {
+    font-size: 1.4rem;
+    margin-bottom: 16px;
+    color: #e0e0e0;
+  }
+
+  /* Label selector */
+  .toolbar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .toolbar label {
+    font-size: 0.85rem;
+    margin-right: 4px;
+    font-weight: 600;
+  }
+  .label-btn {
+    padding: 6px 14px;
+    border: 2px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    transition: all 0.15s;
+  }
+  .label-btn:hover { filter: brightness(1.2); }
+  .label-btn.active { border-color: #fff; box-shadow: 0 0 8px rgba(255,255,255,0.4); }
+
+  .label-btn[data-label="check"] { background: #2ecc71; color: #fff; }
+  .label-btn[data-label="bet"]   { background: #e74c3c; color: #fff; }
+  .label-btn[data-label="call"]  { background: #3498db; color: #fff; }
+  .label-btn[data-label="fold"]  { background: #7f8c8d; color: #fff; }
+  .label-btn[data-label="raise"] { background: #f39c12; color: #fff; }
+  .label-btn[data-label="none"]  { background: #34344e; color: #aaa; }
+
+  .clear-btn {
+    padding: 6px 14px;
+    border: 1px solid #666;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 600;
+    background: #2c2c44;
+    color: #ccc;
+    margin-left: 12px;
+    transition: all 0.15s;
+  }
+  .clear-btn:hover { background: #e74c3c; color: #fff; border-color: #e74c3c; }
+
+  /* Range grid */
+  .range-grid {
+    display: grid;
+    grid-template-columns: repeat(13, 1fr);
+    gap: 2px;
+    width: min(95vw, 600px);
+    user-select: none;
+  }
+  .cell {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(0.55rem, 1.8vw, 0.78rem);
+    font-weight: 600;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.1s;
+    border: 1px solid rgba(255,255,255,0.08);
+    position: relative;
+  }
+  .cell:hover { filter: brightness(1.3); z-index: 1; transform: scale(1.05); }
+
+  /* Hand type base colors (when none) */
+  .cell.pair   { background: #3a3a5c; color: #ddd; }
+  .cell.suited  { background: #2a3a4c; color: #acd; }
+  .cell.offsuit { background: #2c2c3e; color: #aaa; }
+
+  /* Label colors on cells */
+  .cell[data-label="check"] { background: #2ecc71; color: #fff; }
+  .cell[data-label="bet"]   { background: #e74c3c; color: #fff; }
+  .cell[data-label="call"]  { background: #3498db; color: #fff; }
+  .cell[data-label="fold"]  { background: #7f8c8d; color: #fff; }
+  .cell[data-label="raise"] { background: #f39c12; color: #fff; }
+
+  /* Stats */
+  .stats {
+    margin-top: 20px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .stat-item {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    min-width: 110px;
+    text-align: center;
+  }
+  .stat-item .stat-pct {
+    font-size: 1.3rem;
+    display: block;
+    margin-top: 2px;
+  }
+  .stat-item .stat-combos {
+    font-size: 0.7rem;
+    opacity: 0.8;
+    display: block;
+  }
+  .stat-item[data-label="check"] { background: rgba(46,204,113,0.2); color: #2ecc71; }
+  .stat-item[data-label="bet"]   { background: rgba(231,76,60,0.2);  color: #e74c3c; }
+  .stat-item[data-label="call"]  { background: rgba(52,152,219,0.2); color: #3498db; }
+  .stat-item[data-label="fold"]  { background: rgba(127,140,141,0.2); color: #7f8c8d; }
+  .stat-item[data-label="raise"] { background: rgba(243,156,18,0.2); color: #f39c12; }
+  .stat-item[data-label="none"]  { background: rgba(100,100,130,0.15); color: #888; }
+</style>
+</head>
+<body>
+
+<h1>NLH Combo Calculator</h1>
+
+<div class="toolbar">
+  <label>Label:</label>
+  <button class="label-btn active" data-label="check">Check</button>
+  <button class="label-btn" data-label="bet">Bet</button>
+  <button class="label-btn" data-label="call">Call</button>
+  <button class="label-btn" data-label="fold">Fold</button>
+  <button class="label-btn" data-label="raise">Raise</button>
+  <button class="label-btn" data-label="none">None</button>
+  <button class="clear-btn" id="clearAll">Clear All</button>
+</div>
+
+<div class="range-grid" id="rangeGrid"></div>
+
+<div class="stats" id="stats"></div>
+
+<script>
+const RANKS = ['A','K','Q','J','T','9','8','7','6','5','4','3','2'];
+const LABELS = ['check','bet','call','fold','raise','none'];
+const TOTAL_COMBOS = 1326;
+
+let selectedLabel = 'check';
+let isDragging = false;
+
+// Build hand grid data
+const hands = [];
+for (let r = 0; r < 13; r++) {
+  for (let c = 0; c < 13; c++) {
+    let name, type, combos;
+    if (r === c) {
+      name = RANKS[r] + RANKS[c];
+      type = 'pair';
+      combos = 6;
+    } else if (r < c) {
+      name = RANKS[r] + RANKS[c] + 's';
+      type = 'suited';
+      combos = 4;
+    } else {
+      name = RANKS[c] + RANKS[r] + 'o';
+      type = 'offsuit';
+      combos = 12;
+    }
+    hands.push({ name, type, combos, label: 'none' });
+  }
+}
+
+// Render grid
+const grid = document.getElementById('rangeGrid');
+hands.forEach((h, i) => {
+  const cell = document.createElement('div');
+  cell.className = `cell ${h.type}`;
+  cell.textContent = h.name;
+  cell.dataset.index = i;
+  cell.dataset.label = 'none';
+
+  cell.addEventListener('mousedown', (e) => {
+    e.preventDefault();
+    isDragging = true;
+    applyLabel(i);
+  });
+  cell.addEventListener('mouseenter', () => {
+    if (isDragging) applyLabel(i);
+  });
+
+  grid.appendChild(cell);
+});
+
+document.addEventListener('mouseup', () => { isDragging = false; });
+
+// Label buttons
+document.querySelectorAll('.label-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.label-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedLabel = btn.dataset.label;
+  });
+});
+
+// Clear all
+document.getElementById('clearAll').addEventListener('click', () => {
+  hands.forEach((h, i) => {
+    h.label = 'none';
+    const cell = grid.children[i];
+    delete cell.dataset.label;
+  });
+  updateStats();
+});
+
+function applyLabel(index) {
+  hands[index].label = selectedLabel;
+  const cell = grid.children[index];
+  if (selectedLabel === 'none') {
+    delete cell.dataset.label;
+  } else {
+    cell.dataset.label = selectedLabel;
+  }
+  updateStats();
+}
+
+function updateStats() {
+  const counts = {};
+  LABELS.forEach(l => counts[l] = 0);
+  hands.forEach(h => { counts[h.label] += h.combos; });
+
+  const container = document.getElementById('stats');
+  container.innerHTML = '';
+
+  const activeTotal = TOTAL_COMBOS - counts['none'];
+
+  LABELS.filter(l => l !== 'none').forEach(l => {
+    const pct = activeTotal > 0 ? ((counts[l] / activeTotal) * 100).toFixed(1) : '0.0';
+    const div = document.createElement('div');
+    div.className = 'stat-item';
+    div.dataset.label = l;
+    div.innerHTML = `${l.toUpperCase()}<span class="stat-pct">${pct}%</span><span class="stat-combos">${counts[l]} / ${activeTotal} combos</span>`;
+    container.appendChild(div);
+  });
+}
+
+updateStats();
+</script>
+</body>
+</html>
