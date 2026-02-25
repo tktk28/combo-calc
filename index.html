@@ -16,17 +16,13 @@
     align-items: center;
     padding: 20px;
   }
-  h1 {
-    font-size: 1.4rem;
-    margin-bottom: 16px;
-    color: #e0e0e0;
-  }
+  h1 { font-size: 1.4rem; margin-bottom: 16px; color: #e0e0e0; }
 
-  /* Label selector */
+  /* Toolbars */
   .toolbar {
     display: flex;
     gap: 8px;
-    margin-bottom: 16px;
+    margin-bottom: 10px;
     align-items: center;
     flex-wrap: wrap;
     justify-content: center;
@@ -51,10 +47,29 @@
 
   .label-btn[data-label="check"] { background: #2ecc71; color: #fff; }
   .label-btn[data-label="bet"]   { background: #e74c3c; color: #fff; }
-  .label-btn[data-label="call"]  { background: #3498db; color: #fff; }
-  .label-btn[data-label="fold"]  { background: #7f8c8d; color: #fff; }
-  .label-btn[data-label="raise"] { background: #f39c12; color: #fff; }
+  .label-btn[data-label="call"]  { background: #2ecc71; color: #fff; }
+  .label-btn[data-label="fold"]  { background: #3498db; color: #fff; }
+  .label-btn[data-label="raise"] { background: #e74c3c; color: #fff; }
   .label-btn[data-label="none"]  { background: #34344e; color: #aaa; }
+
+  .suit-btn {
+    padding: 6px 10px;
+    border: 2px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    background: #2c2c44;
+    color: #ccc;
+    transition: all 0.15s;
+  }
+  .suit-btn:hover { filter: brightness(1.3); }
+  .suit-btn.active { border-color: #fff; box-shadow: 0 0 8px rgba(255,255,255,0.4); }
+  .suit-btn[data-suit="s"] { color: #aaa; }
+  .suit-btn[data-suit="h"] { color: #e74c3c; }
+  .suit-btn[data-suit="d"] { color: #3498db; }
+  .suit-btn[data-suit="c"] { color: #2ecc71; }
+  .suit-btn[data-suit="all"] { color: #ddd; font-size: 0.8rem; }
 
   .clear-btn {
     padding: 6px 14px;
@@ -69,6 +84,71 @@
     transition: all 0.15s;
   }
   .clear-btn:hover { background: #e74c3c; color: #fff; border-color: #e74c3c; }
+
+  /* Board selector */
+  .board-section {
+    margin-bottom: 14px;
+    text-align: center;
+  }
+  .board-section > label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 6px;
+  }
+  .board-display {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    margin-bottom: 8px;
+    min-height: 36px;
+    align-items: center;
+  }
+  .board-card {
+    width: 36px;
+    height: 36px;
+    border-radius: 5px;
+    background: #2c2c44;
+    border: 1px dashed #555;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
+  .board-card.filled {
+    border: 1px solid #888;
+    background: #fff;
+    cursor: pointer;
+  }
+  .board-card.filled.suit-s { color: #222; }
+  .board-card.filled.suit-h { color: #e74c3c; }
+  .board-card.filled.suit-d { color: #3498db; }
+  .board-card.filled.suit-c { color: #228B22; }
+  .card-picker {
+    display: grid;
+    grid-template-columns: repeat(13, 1fr);
+    gap: 2px;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+  .pick-card {
+    padding: 3px 0;
+    border: 1px solid #333;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: clamp(0.55rem, 1.6vw, 0.75rem);
+    font-weight: 700;
+    text-align: center;
+    background: #22223a;
+    transition: all 0.1s;
+  }
+  .pick-card:hover { filter: brightness(1.4); }
+  .pick-card.selected { border-color: #f1c40f; box-shadow: 0 0 6px rgba(241,196,15,0.5); }
+  .pick-card.suit-s { color: #bbb; }
+  .pick-card.suit-h { color: #e74c3c; }
+  .pick-card.suit-d { color: #3498db; }
+  .pick-card.suit-c { color: #2ecc71; }
 
   /* Range grid */
   .range-grid {
@@ -87,23 +167,14 @@
     font-weight: 600;
     border-radius: 4px;
     cursor: pointer;
-    transition: all 0.1s;
-    border: 1px solid rgba(255,255,255,0.08);
+    transition: filter 0.1s, transform 0.1s;
+    border: none;
     position: relative;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+    overflow: hidden;
   }
   .cell:hover { filter: brightness(1.3); z-index: 1; transform: scale(1.05); }
-
-  /* Hand type base colors (when none) */
-  .cell.pair   { background: #3a3a5c; color: #ddd; }
-  .cell.suited  { background: #2a3a4c; color: #acd; }
-  .cell.offsuit { background: #2c2c3e; color: #aaa; }
-
-  /* Label colors on cells */
-  .cell[data-label="check"] { background: #2ecc71; color: #fff; }
-  .cell[data-label="bet"]   { background: #e74c3c; color: #fff; }
-  .cell[data-label="call"]  { background: #3498db; color: #fff; }
-  .cell[data-label="fold"]  { background: #7f8c8d; color: #fff; }
-  .cell[data-label="raise"] { background: #f39c12; color: #fff; }
 
   /* Stats */
   .stats {
@@ -121,27 +192,24 @@
     min-width: 110px;
     text-align: center;
   }
-  .stat-item .stat-pct {
-    font-size: 1.3rem;
-    display: block;
-    margin-top: 2px;
-  }
-  .stat-item .stat-combos {
-    font-size: 0.7rem;
-    opacity: 0.8;
-    display: block;
-  }
+  .stat-item .stat-pct { font-size: 1.3rem; display: block; margin-top: 2px; }
+  .stat-item .stat-combos { font-size: 0.7rem; opacity: 0.8; display: block; }
   .stat-item[data-label="check"] { background: rgba(46,204,113,0.2); color: #2ecc71; }
   .stat-item[data-label="bet"]   { background: rgba(231,76,60,0.2);  color: #e74c3c; }
-  .stat-item[data-label="call"]  { background: rgba(52,152,219,0.2); color: #3498db; }
-  .stat-item[data-label="fold"]  { background: rgba(127,140,141,0.2); color: #7f8c8d; }
-  .stat-item[data-label="raise"] { background: rgba(243,156,18,0.2); color: #f39c12; }
-  .stat-item[data-label="none"]  { background: rgba(100,100,130,0.15); color: #888; }
+  .stat-item[data-label="call"]  { background: rgba(46,204,113,0.2); color: #2ecc71; }
+  .stat-item[data-label="fold"]  { background: rgba(52,152,219,0.2); color: #3498db; }
+  .stat-item[data-label="raise"] { background: rgba(231,76,60,0.2);  color: #e74c3c; }
 </style>
 </head>
 <body>
 
 <h1>NLH Combo Calculator</h1>
+
+<div class="board-section">
+  <label>Board:</label>
+  <div class="board-display" id="boardDisplay"></div>
+  <div class="card-picker" id="cardPicker"></div>
+</div>
 
 <div class="toolbar">
   <label>Label:</label>
@@ -154,48 +222,147 @@
   <button class="clear-btn" id="clearAll">Clear All</button>
 </div>
 
+<div class="toolbar">
+  <label>Suit:</label>
+  <button class="suit-btn active" data-suit="all">ALL</button>
+  <button class="suit-btn" data-suit="s">&#9824;</button>
+  <button class="suit-btn" data-suit="h">&#9829;</button>
+  <button class="suit-btn" data-suit="d">&#9830;</button>
+  <button class="suit-btn" data-suit="c">&#9827;</button>
+</div>
+
 <div class="range-grid" id="rangeGrid"></div>
 
 <div class="stats" id="stats"></div>
 
 <script>
 const RANKS = ['A','K','Q','J','T','9','8','7','6','5','4','3','2'];
+const SUITS = ['s','h','d','c'];
+const SUIT_SYMBOLS = { s: '\u2660', h: '\u2665', d: '\u2666', c: '\u2663' };
 const LABELS = ['check','bet','call','fold','raise','none'];
-const TOTAL_COMBOS = 1326;
+const LABEL_COLORS = {
+  check: '#2ecc71', bet: '#e74c3c', call: '#2ecc71',
+  fold:  '#3498db', raise: '#e74c3c'
+};
+const BASE_COLORS = { pair: '#3a3a5c', suited: '#2a3a4c', offsuit: '#2c2c3e' };
 
 let selectedLabel = 'check';
+let suitMode = 'all'; // 'all' or 'pick'
+const selectedSuits = new Set(); // only used when suitMode === 'pick'
 let isDragging = false;
+const boardCards = new Set(); // e.g. "Ts", "9h"
+
+// Generate combo suit pairs for each hand type
+function makeCombos(type) {
+  const combos = [];
+  if (type === 'pair') {
+    for (let i = 0; i < 4; i++)
+      for (let j = i + 1; j < 4; j++)
+        combos.push({ suits: [SUITS[i], SUITS[j]], label: 'none' });
+  } else if (type === 'suited') {
+    for (const s of SUITS)
+      combos.push({ suits: [s, s], label: 'none' });
+  } else {
+    for (let i = 0; i < 4; i++)
+      for (let j = 0; j < 4; j++)
+        if (i !== j) combos.push({ suits: [SUITS[i], SUITS[j]], label: 'none' });
+  }
+  return combos;
+}
+
+// Check if a combo is blocked by the board
+function isBlocked(hand, combo) {
+  if (boardCards.size === 0) return false;
+  const card1 = hand.ranks[0] + combo.suits[0];
+  const card2 = hand.ranks[1] + combo.suits[1];
+  return boardCards.has(card1) || boardCards.has(card2);
+}
 
 // Build hand grid data
 const hands = [];
 for (let r = 0; r < 13; r++) {
   for (let c = 0; c < 13; c++) {
-    let name, type, combos;
+    let name, type, ranks;
     if (r === c) {
       name = RANKS[r] + RANKS[c];
       type = 'pair';
-      combos = 6;
+      ranks = [RANKS[r], RANKS[c]];
     } else if (r < c) {
       name = RANKS[r] + RANKS[c] + 's';
       type = 'suited';
-      combos = 4;
+      ranks = [RANKS[r], RANKS[c]];
     } else {
       name = RANKS[c] + RANKS[r] + 'o';
       type = 'offsuit';
-      combos = 12;
+      ranks = [RANKS[c], RANKS[r]];
     }
-    hands.push({ name, type, combos, label: 'none' });
+    hands.push({ name, type, ranks, combos: makeCombos(type) });
   }
 }
 
-// Render grid
+// ---- Board Card Picker ----
+const pickerEl = document.getElementById('cardPicker');
+const boardDisplayEl = document.getElementById('boardDisplay');
+
+// Build 4 rows (suits) x 13 cols (ranks)
+for (const suit of SUITS) {
+  for (const rank of RANKS) {
+    const card = rank + suit;
+    const el = document.createElement('div');
+    el.className = `pick-card suit-${suit}`;
+    el.textContent = rank + SUIT_SYMBOLS[suit];
+    el.dataset.card = card;
+    el.addEventListener('click', () => toggleBoardCard(card));
+    pickerEl.appendChild(el);
+  }
+}
+
+function toggleBoardCard(card) {
+  if (boardCards.has(card)) {
+    boardCards.delete(card);
+  } else {
+    if (boardCards.size >= 5) return;
+    boardCards.add(card);
+  }
+  renderBoardDisplay();
+  renderCardPicker();
+  renderAllCells();
+  updateStats();
+}
+
+function renderBoardDisplay() {
+  boardDisplayEl.innerHTML = '';
+  const cards = Array.from(boardCards);
+  for (let i = 0; i < 5; i++) {
+    const el = document.createElement('div');
+    el.className = 'board-card';
+    if (i < cards.length) {
+      const c = cards[i];
+      const suit = c[c.length - 1];
+      const rank = c.slice(0, -1);
+      el.classList.add('filled', `suit-${suit}`);
+      el.textContent = rank + SUIT_SYMBOLS[suit];
+      el.addEventListener('click', () => toggleBoardCard(c));
+    }
+    boardDisplayEl.appendChild(el);
+  }
+}
+
+function renderCardPicker() {
+  pickerEl.querySelectorAll('.pick-card').forEach(el => {
+    el.classList.toggle('selected', boardCards.has(el.dataset.card));
+  });
+}
+
+renderBoardDisplay();
+
+// ---- Range Grid ----
 const grid = document.getElementById('rangeGrid');
 hands.forEach((h, i) => {
   const cell = document.createElement('div');
-  cell.className = `cell ${h.type}`;
+  cell.className = 'cell';
   cell.textContent = h.name;
   cell.dataset.index = i;
-  cell.dataset.label = 'none';
 
   cell.addEventListener('mousedown', (e) => {
     e.preventDefault();
@@ -220,36 +387,120 @@ document.querySelectorAll('.label-btn').forEach(btn => {
   });
 });
 
+// Suit buttons
+function renderSuitButtons() {
+  document.querySelectorAll('.suit-btn').forEach(b => {
+    const s = b.dataset.suit;
+    if (s === 'all') {
+      b.classList.toggle('active', suitMode === 'all');
+    } else {
+      b.classList.toggle('active', suitMode === 'pick' && selectedSuits.has(s));
+    }
+  });
+}
+
+document.querySelectorAll('.suit-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const s = btn.dataset.suit;
+    if (s === 'all') {
+      suitMode = 'all';
+      selectedSuits.clear();
+    } else {
+      suitMode = 'pick';
+      if (selectedSuits.has(s)) {
+        selectedSuits.delete(s);
+        if (selectedSuits.size === 0) suitMode = 'all';
+      } else {
+        selectedSuits.add(s);
+      }
+    }
+    renderSuitButtons();
+  });
+});
+
 // Clear all
 document.getElementById('clearAll').addEventListener('click', () => {
-  hands.forEach((h, i) => {
-    h.label = 'none';
-    const cell = grid.children[i];
-    delete cell.dataset.label;
+  hands.forEach(h => {
+    h.combos.forEach(cb => { cb.label = 'none'; });
   });
+  renderAllCells();
   updateStats();
 });
 
 function applyLabel(index) {
-  hands[index].label = selectedLabel;
-  const cell = grid.children[index];
-  if (selectedLabel === 'none') {
-    delete cell.dataset.label;
-  } else {
-    cell.dataset.label = selectedLabel;
-  }
+  const h = hands[index];
+  h.combos.forEach(cb => {
+    if (isBlocked(h, cb)) return;
+    const match = suitMode === 'all' || cb.suits.some(s => selectedSuits.has(s));
+    if (match) {
+      cb.label = selectedLabel;
+    }
+  });
+  renderCell(index);
   updateStats();
+}
+
+function renderCell(index) {
+  const h = hands[index];
+  const cell = grid.children[index];
+
+  // Only count non-blocked combos
+  const available = h.combos.filter(cb => !isBlocked(h, cb));
+  const total = available.length;
+
+  if (total === 0) {
+    cell.style.background = '#1a1a1a';
+    cell.style.opacity = '0.4';
+    return;
+  }
+  cell.style.opacity = '1';
+
+  const counts = {};
+  LABELS.forEach(l => counts[l] = 0);
+  available.forEach(cb => { counts[cb.label]++; });
+
+  const base = BASE_COLORS[h.type];
+
+  if (counts['none'] === total) {
+    cell.style.background = base;
+    return;
+  }
+
+  const segments = [];
+  let pos = 0;
+  for (const l of LABELS) {
+    if (counts[l] > 0 && l !== 'none') {
+      const end = pos + (counts[l] / total) * 100;
+      segments.push(`${LABEL_COLORS[l]} ${pos}% ${end}%`);
+      pos = end;
+    }
+  }
+  if (pos < 100) {
+    segments.push(`${base} ${pos}% 100%`);
+  }
+  cell.style.background = `linear-gradient(to right, ${segments.join(', ')})`;
+}
+
+function renderAllCells() {
+  hands.forEach((_, i) => renderCell(i));
 }
 
 function updateStats() {
   const counts = {};
   LABELS.forEach(l => counts[l] = 0);
-  hands.forEach(h => { counts[h.label] += h.combos; });
+  let totalAvailable = 0;
 
+  hands.forEach(h => {
+    h.combos.forEach(cb => {
+      if (isBlocked(h, cb)) return;
+      counts[cb.label]++;
+      totalAvailable++;
+    });
+  });
+
+  const activeTotal = totalAvailable - counts['none'];
   const container = document.getElementById('stats');
   container.innerHTML = '';
-
-  const activeTotal = TOTAL_COMBOS - counts['none'];
 
   LABELS.filter(l => l !== 'none').forEach(l => {
     const pct = activeTotal > 0 ? ((counts[l] / activeTotal) * 100).toFixed(1) : '0.0';
@@ -261,6 +512,7 @@ function updateStats() {
   });
 }
 
+renderAllCells();
 updateStats();
 </script>
 </body>
