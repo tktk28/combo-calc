@@ -198,6 +198,7 @@ hands.forEach((h, i) => {
   cell.dataset.label = 'none';
 
   cell.addEventListener('mousedown', (e) => {
+    if (e.button !== 0) return;
     e.preventDefault();
     isDragging = true;
     applyLabel(i);
