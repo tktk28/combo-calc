@@ -1,0 +1,50 @@
+name: PokerKeyboard
+options:
+  deploymentTarget:
+    iOS: "15.0"
+  createIntermediateGroups: true
+  groupSortPosition: top
+
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    CODE_SIGN_STYLE: Automatic
+    ENABLE_USER_SCRIPT_SANDBOXING: NO
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+
+targets:
+
+  PokerKeyboardApp:
+    type: application
+    platform: iOS
+    sources:
+      - path: PokerKeyboardApp
+        excludes:
+          - "Info.plist"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.pokerkeyboard.app
+        PRODUCT_NAME: PokerKeyboardApp
+        INFOPLIST_FILE: PokerKeyboardApp/Info.plist
+        GENERATE_INFOPLIST_FILE: NO
+        TARGETED_DEVICE_FAMILY: "1"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+    dependencies:
+      - target: PokerKeyboardExtension
+
+  PokerKeyboardExtension:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: PokerKeyboardExtension
+        excludes:
+          - "Info.plist"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.pokerkeyboard.app.keyboard
+        PRODUCT_NAME: PokerKeyboardExtension
+        INFOPLIST_FILE: PokerKeyboardExtension/Info.plist
+        GENERATE_INFOPLIST_FILE: NO
+        TARGETED_DEVICE_FAMILY: "1"
